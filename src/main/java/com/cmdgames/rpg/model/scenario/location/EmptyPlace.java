@@ -1,6 +1,6 @@
 package com.cmdgames.rpg.model.scenario.location;
 
-import com.cmdgames.rpg.model.characters.ElderOne;
+import com.cmdgames.rpg.model.characters.ElderThing;
 import com.cmdgames.rpg.model.scenario.interactions.Battle;
 
 import java.util.ArrayList;
@@ -24,8 +24,8 @@ public class EmptyPlace implements Place {
         // Battle battle = FightFactory.getFight(FightType.ELDERTHING);
         // also create a builder for the Player
         List<Battle> events = new ArrayList<>();
-        ElderOne elderOne = new ElderOne(100,100,50);
-        Battle battle = new Battle(elderOne);
+        ElderThing elderThing = new ElderThing(100,100,50);
+        Battle battle = new Battle(elderThing);
         events.add(battle);
         return events;
     }

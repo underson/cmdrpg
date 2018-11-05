@@ -1,9 +1,9 @@
 package com.cmdgames.rpg.model.characters;
 
-public class ElderOne extends Enemy {
+public class ElderThing extends Enemy {
 
-    public ElderOne(int health, int strength, int speed){
-        super(health, strength, speed, "Elder One");
+    public ElderThing(int health, int strength, int speed){
+        super(health, strength, speed, "Elder Thing");
     }
 
     @Override
