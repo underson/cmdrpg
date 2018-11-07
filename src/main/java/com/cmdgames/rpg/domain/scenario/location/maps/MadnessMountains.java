@@ -1,6 +1,6 @@
 package com.cmdgames.rpg.domain.scenario.location.maps;
 
-import com.cmdgames.rpg.domain.characters.Player;
+import com.cmdgames.rpg.domain.Player;
 import com.cmdgames.rpg.domain.scenario.location.Map;
 import com.cmdgames.rpg.domain.scenario.location.places.EmptyPlace;
 import com.cmdgames.rpg.domain.scenario.location.Place;

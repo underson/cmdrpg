@@ -1,7 +1,7 @@
 package com.cmdgames.rpg.domain.scenario.interactions;
 
 import com.cmdgames.rpg.domain.characters.Enemy;
-import com.cmdgames.rpg.domain.characters.Player;
+import com.cmdgames.rpg.domain.Player;
 
 public final class BattleActions {
 

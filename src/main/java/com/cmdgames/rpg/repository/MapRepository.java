@@ -1,9 +1,8 @@
 package com.cmdgames.rpg.repository;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import com.cmdgames.rpg.domain.scenario.exception.DataNotFoundException;
+
+import java.io.*;
 
 public class MapRepository {
 
@@ -15,6 +14,23 @@ public class MapRepository {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Persistable retrieve() throws FileNotFoundException, DataNotFoundException {
+        File saveDataFile = readSaveDataFile();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(saveDataFile))){
+            return (Persistable) ois.readObject();
+        } catch (IOException | ClassNotFoundException ex) {
+            throw new DataNotFoundException();
+        }
+    }
+
+    private File readSaveDataFile() throws FileNotFoundException {
+        File file = new File(MAP_FILE_PATH);
+        if (file.exists()) {
+            return file;
+        }
+        throw new FileNotFoundException("No saved data found!");
     }
 
     private File createSaveDataFile() {

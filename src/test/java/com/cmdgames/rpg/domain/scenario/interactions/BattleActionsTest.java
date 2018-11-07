@@ -2,7 +2,7 @@ package com.cmdgames.rpg.domain.scenario.interactions;
 
 import com.cmdgames.rpg.domain.characters.ElderThing;
 import com.cmdgames.rpg.domain.characters.Enemy;
-import com.cmdgames.rpg.domain.characters.Player;
+import com.cmdgames.rpg.domain.Player;
 import org.junit.Test;
 import static org.junit.Assert.*;
 public class BattleActionsTest {

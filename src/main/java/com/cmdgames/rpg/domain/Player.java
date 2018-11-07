@@ -1,13 +1,14 @@
-package com.cmdgames.rpg.domain.characters;
+package com.cmdgames.rpg.domain;
 
 import com.cmdgames.rpg.repository.Persistable;
 
-public class Player implements Persistable {
+import java.io.Serializable;
+
+public class Player implements Persistable, Serializable {
 
     private String name;
-    private int age;
-    private int strength; // takes more hits out of your opponents
-    private int speed; // to be able to skip fights
+    private int strength;
+    private int speed;
     private int health;
 
     public int getStrength() {
@@ -42,13 +43,6 @@ public class Player implements Persistable {
         this.name = name;
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
 
     @Override
     public Object getPersistableObject() {

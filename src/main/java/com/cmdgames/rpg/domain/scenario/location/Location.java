@@ -1,6 +1,10 @@
 package com.cmdgames.rpg.domain.scenario.location;
 
-public class Location {
+import com.cmdgames.rpg.repository.Persistable;
+
+import java.io.Serializable;
+
+public class Location implements Persistable, Serializable {
 
     private int positionX;
     private int positionY;
@@ -37,5 +41,10 @@ public class Location {
     }
     public int incrementAndGetPositionX() {
         return ++positionX;
+    }
+
+    @Override
+    public Object getPersistableObject() {
+        return this;
     }
 }

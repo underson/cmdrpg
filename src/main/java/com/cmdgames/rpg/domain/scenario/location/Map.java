@@ -1,6 +1,6 @@
 package com.cmdgames.rpg.domain.scenario.location;
 
-import com.cmdgames.rpg.domain.characters.Player;
+import com.cmdgames.rpg.domain.Player;
 import com.cmdgames.rpg.domain.scenario.exception.NavigationNotAllowedException;
 import com.cmdgames.rpg.repository.Persistable;
 

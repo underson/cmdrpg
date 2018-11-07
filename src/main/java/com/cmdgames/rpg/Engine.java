@@ -1,39 +1,53 @@
 package com.cmdgames.rpg;
 
-import com.cmdgames.rpg.domain.characters.Player;
+import com.cmdgames.rpg.domain.Player;
 import com.cmdgames.rpg.domain.scenario.exception.ArgumentNotAllowedException;
-import com.cmdgames.rpg.domain.scenario.exception.DataNotFoundException;
-import com.cmdgames.rpg.domain.scenario.location.maps.MadnessMountains;
 import com.cmdgames.rpg.domain.scenario.exception.NavigationNotAllowedException;
 import com.cmdgames.rpg.domain.scenario.interactions.Battle;
 import com.cmdgames.rpg.domain.scenario.interactions.BattleContext;
 import com.cmdgames.rpg.domain.scenario.location.Place;
-import com.cmdgames.rpg.repository.PlayerRepository;
+import com.cmdgames.rpg.domain.scenario.location.maps.MadnessMountains;
+import com.cmdgames.rpg.front.CommandPanel;
+import com.cmdgames.rpg.service.PlayerService;
 import com.cmdgames.rpg.utils.CommandLineUtils;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Scanner;
 
 public final class Engine {
 
     private MadnessMountains map;
-    private Player mainPlayer;
 
     public void startGame(){
+
         CommandLineUtils.print("At the mountains of madness");//ascii art
         CommandLineUtils.print("Welcome to the Artic");
 
-        CommandLineUtils.print("Do you want to start a new game or continue an existing?");
+        PlayerService playerService = new PlayerService();
+        Player player = playerService.retrieveSavedPlayer();
 
-        Scanner scanner = new Scanner(System.in);
-        String command = scanner.nextLine();
-        Player mainPlayer = startUpMainCharacter(command);
+        if(player == null) {
+            player = new Player();
+            player.setName(CommandPanel.getPlayerName());
+            player.setHealth(100);
+            player.setSpeed(100);
+            player.setStrength(100);
+            playerService.savePlayer(player);
+        }else{
+            int option = CommandPanel.getStartPanelOption();
 
-        CommandLineUtils.print("Hi Joseph, you just got to the bottom of the mountains, let´s check the base");
+            if(option == 2) {
+                player.setName(CommandPanel.getPlayerName());
+                player.setHealth(100);
+                player.setSpeed(100);
+                player.setStrength(100);
+                playerService.savePlayer(player);
+            }
+        }
 
-        this.mainPlayer = mainPlayer;
-        this.map = new MadnessMountains(mainPlayer);
+        CommandLineUtils.print("Hi "+player.getName()+", you just got to the bottom of the mountains, let´s check the base");
+
+        this.map = new MadnessMountains(player);
         // TODO fix this recursive function to avoid exceptions
         try {
             String command1 = newPlayerStep(map);
@@ -54,9 +68,8 @@ public final class Engine {
         navigate(madnessMountains, command);
     }
 
-
     private void interactWith(final Place actualPlace) {
-        //CommandLineUtils.print(actualPlace.getPlaceAscii());
+        //TODO CommandLineUtils.print(actualPlace.getPlaceAscii());
         CommandLineUtils.print(actualPlace.getPlaceDescription());
         actualPlace.getPlaceEvents().forEach( event -> {
             reactToEvent(event);
@@ -77,7 +90,7 @@ public final class Engine {
 
         try {
             String command = readAndCheck();
-            battleContext.setPlayer(this.mainPlayer);
+            battleContext.setPlayer(null);
             battleContext.setAction(
                     battleContext.getBattleAction(Integer.valueOf(command))
             );
@@ -113,24 +126,6 @@ public final class Engine {
         if(!errors.isEmpty())
             throw new ArgumentNotAllowedException();
         return command;
-    }
-
-    private Player startUpMainCharacter(String name){
-
-        PlayerRepository playerRepository = new PlayerRepository();
-        Player mainPlayer = new Player();
-
-        try {
-            mainPlayer = (Player) playerRepository.retrieve().getPersistableObject();
-        } catch (FileNotFoundException | DataNotFoundException e) {
-            mainPlayer.setName(name);
-            mainPlayer.setAge(25);
-            mainPlayer.setHealth(100);
-            mainPlayer.setSpeed(60);
-            mainPlayer.setStrength(60);
-        }
-
-        return mainPlayer;
     }
 
 }
