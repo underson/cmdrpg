@@ -9,8 +9,6 @@
   <version>1.0-SNAPSHOT</version>
 
   <name>rpg</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,6 +23,7 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+
   </dependencies>
 
   <build>
@@ -70,6 +69,26 @@
                   <target>1.8</target>
               </configuration>
           </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>cobertura-maven-plugin</artifactId>
+          <version>2.7</version>
+          <configuration>
+            <check></check>
+            <instrumentation>
+              <excludes>
+                <exclude>com/cmdgames/rpg/**/*.class</exclude>
+              </excludes>
+            </instrumentation>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>instrument</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
   </build>
 </project>

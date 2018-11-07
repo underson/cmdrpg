@@ -1,14 +1,17 @@
 package com.cmdgames.rpg;
 
-import com.cmdgames.rpg.model.characters.Player;
-import com.cmdgames.rpg.model.scenario.exception.ArgumentNotAllowedException;
-import com.cmdgames.rpg.model.scenario.MadnessMountains;
-import com.cmdgames.rpg.model.scenario.exception.NavigationNotAllowedException;
-import com.cmdgames.rpg.model.scenario.interactions.Battle;
-import com.cmdgames.rpg.model.scenario.interactions.BattleContext;
-import com.cmdgames.rpg.model.scenario.location.Place;
+import com.cmdgames.rpg.domain.characters.Player;
+import com.cmdgames.rpg.domain.scenario.exception.ArgumentNotAllowedException;
+import com.cmdgames.rpg.domain.scenario.exception.DataNotFoundException;
+import com.cmdgames.rpg.domain.scenario.location.maps.MadnessMountains;
+import com.cmdgames.rpg.domain.scenario.exception.NavigationNotAllowedException;
+import com.cmdgames.rpg.domain.scenario.interactions.Battle;
+import com.cmdgames.rpg.domain.scenario.interactions.BattleContext;
+import com.cmdgames.rpg.domain.scenario.location.Place;
+import com.cmdgames.rpg.repository.PlayerRepository;
 import com.cmdgames.rpg.utils.CommandLineUtils;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -20,13 +23,21 @@ public final class Engine {
     public void startGame(){
         CommandLineUtils.print("At the mountains of madness");//ascii art
         CommandLineUtils.print("Welcome to the Artic");
-        Player mainPlayer = startUpMainCharacter();
+
+        CommandLineUtils.print("Do you want to start a new game or continue an existing?");
+
+        Scanner scanner = new Scanner(System.in);
+        String command = scanner.nextLine();
+        Player mainPlayer = startUpMainCharacter(command);
+
+        CommandLineUtils.print("Hi Joseph, you just got to the bottom of the mountains, let´s check the base");
+
         this.mainPlayer = mainPlayer;
         this.map = new MadnessMountains(mainPlayer);
-        // TODO do this as recursive function
+        // TODO fix this recursive function to avoid exceptions
         try {
-            String command = newPlayerStep(map);
-            navigate(map, command);
+            String command1 = newPlayerStep(map);
+            navigate(map, command1);
         }catch (ArgumentNotAllowedException ex){
             CommandLineUtils.print(ex.getMessage());
         }
@@ -104,13 +115,21 @@ public final class Engine {
         return command;
     }
 
-    private Player startUpMainCharacter(){
+    private Player startUpMainCharacter(String name){
+
+        PlayerRepository playerRepository = new PlayerRepository();
         Player mainPlayer = new Player();
-        mainPlayer.setName("User 1");
-        mainPlayer.setAge(25);
-        mainPlayer.setHealth(100);
-        mainPlayer.setSpeed(60);
-        mainPlayer.setStrength(60);
+
+        try {
+            mainPlayer = (Player) playerRepository.retrieve().getPersistableObject();
+        } catch (FileNotFoundException | DataNotFoundException e) {
+            mainPlayer.setName(name);
+            mainPlayer.setAge(25);
+            mainPlayer.setHealth(100);
+            mainPlayer.setSpeed(60);
+            mainPlayer.setStrength(60);
+        }
+
         return mainPlayer;
     }
 
