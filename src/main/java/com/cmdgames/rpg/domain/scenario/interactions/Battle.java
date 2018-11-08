@@ -5,6 +5,8 @@ import com.cmdgames.rpg.domain.characters.Enemy;
 public final class Battle {
 
     private Enemy enemy;
+    private static final int HIT = 1;
+    private static final int RUN = 2;
 
     public Battle(final Enemy enemy){
         this.enemy = enemy;
@@ -15,13 +17,11 @@ public final class Battle {
     }
 
     public String getEventMessage() {
-        return  "Choose one of the actions.\n" +
-                "1. HIT\n" +
-                "2. RUN\n" ;
+        return String.format("Choose on the the actions: \n%d. HIT \n%d. RUN", HIT, RUN);
     }
 
     public BattleContext doPlayerAction(final BattleContext battleContext) {
-        switch (battleContext.getAction()){
+        switch (battleContext.getCommandAction()){
             case HIT:
                 this.enemy = BattleActions.doAttack(battleContext.getPlayer(), this.enemy);
                 if(this.enemy.getHealth() == 0) {
@@ -60,4 +60,5 @@ public final class Battle {
         }
         return battleContext;
     }
+
 }

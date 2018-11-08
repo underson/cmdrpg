@@ -35,7 +35,6 @@ public final class Engine {
             playerService.savePlayer(player);
         }else{
             int option = CommandPanel.getStartPanelOption();
-
             if(option == 2) {
                 player.setName(CommandPanel.getPlayerName());
                 player.setHealth(100);
@@ -45,7 +44,8 @@ public final class Engine {
             }
         }
 
-        CommandLineUtils.print("Hi "+player.getName()+", you just got to the bottom of the mountains, let´s check the base");
+        CommandLineUtils.print(
+                String.format("Hi %s you just got to the bottom of the mountains, let´s check the base", player.getName()));
 
         this.map = new MadnessMountains(player);
         // TODO fix this recursive function to avoid exceptions
@@ -60,7 +60,7 @@ public final class Engine {
     private void navigate (final MadnessMountains madnessMountains, String command){
         try {
             Place actualPlace = madnessMountains.navigate(Integer.valueOf(command));
-            interactWith(actualPlace);
+            interactWith(actualPlace, madnessMountains.getMainCharacter());
             command = newPlayerStep(madnessMountains);
         } catch (NavigationNotAllowedException | ArgumentNotAllowedException ex) {
             CommandLineUtils.print(ex.getMessage());
@@ -68,15 +68,15 @@ public final class Engine {
         navigate(madnessMountains, command);
     }
 
-    private void interactWith(final Place actualPlace) {
+    private void interactWith(final Place actualPlace, final Player player) {
         //TODO CommandLineUtils.print(actualPlace.getPlaceAscii());
         CommandLineUtils.print(actualPlace.getPlaceDescription());
         actualPlace.getPlaceEvents().forEach( event -> {
-            reactToEvent(event);
+            reactToEvent(event, player);
         });
     }
 
-    private void reactToEvent(final Battle event) {
+    private void reactToEvent(final Battle event, final Player player) {
 
         if(event.getEnemy().getHealth() <= 0){
             CommandLineUtils.print("There is a dead " + event.getEnemy().getName() + "here");
@@ -90,17 +90,15 @@ public final class Engine {
 
         try {
             String command = readAndCheck();
-            battleContext.setPlayer(null);
-            battleContext.setAction(
-                    battleContext.getBattleAction(Integer.valueOf(command))
-            );
+            battleContext.setPlayer(player);
+            battleContext.setCommandAction(Integer.valueOf(command));
             battleContext = event.doPlayerAction(battleContext);
             CommandLineUtils.print(battleContext.getMessage());
             battleContext = event.doEnemyAction(battleContext);
             CommandLineUtils.print(battleContext.getMessage());
         } catch (ArgumentNotAllowedException ex) {
             CommandLineUtils.print(ex.getMessage());
-            reactToEvent(event);
+            reactToEvent(event, player);
         }
 
         if(battleContext.isRun() || battleContext.isFinished())
@@ -109,7 +107,7 @@ public final class Engine {
         if(battleContext.isDead())
             startGame();
 
-        reactToEvent(event);
+        reactToEvent(event, player);
     }
 
     private String newPlayerStep(final MadnessMountains madnessMountains) throws ArgumentNotAllowedException {
@@ -127,5 +125,4 @@ public final class Engine {
             throw new ArgumentNotAllowedException();
         return command;
     }
-
 }

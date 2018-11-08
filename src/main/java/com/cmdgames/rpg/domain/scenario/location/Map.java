@@ -2,9 +2,8 @@ package com.cmdgames.rpg.domain.scenario.location;
 
 import com.cmdgames.rpg.domain.Player;
 import com.cmdgames.rpg.domain.scenario.exception.NavigationNotAllowedException;
-import com.cmdgames.rpg.repository.Persistable;
 
-public abstract class Map implements Persistable{
+public abstract class Map {
 
     protected Location location;
     protected Player mainCharacter;
@@ -32,8 +31,4 @@ public abstract class Map implements Persistable{
         return this.mainCharacter;
     }
 
-    @Override
-    public Object getPersistableObject() {
-        return this;
-    }
 }

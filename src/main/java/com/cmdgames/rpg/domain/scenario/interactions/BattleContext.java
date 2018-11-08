@@ -4,24 +4,13 @@ import com.cmdgames.rpg.domain.Player;
 
 public final class BattleContext {
 
-    private BattleAction action;
     private Player player;
     private String message;
+    private int commandAction;
     private boolean run;
     private boolean finished;
     private boolean dead;
 
-
-    public BattleAction getBattleAction(int command) {
-        switch (command){
-            case 1:
-                return BattleAction.HIT;
-            case 2:
-                return BattleAction.RUN;
-            default:
-                return BattleAction.RUN;
-        }
-    }
 
     public String getMessage(){
         return this.message;
@@ -37,14 +26,6 @@ public final class BattleContext {
 
     public void setFinished(boolean finished) {
         this.finished = finished;
-    }
-
-    public BattleAction getAction() {
-        return action;
-    }
-
-    public void setAction(BattleAction action) {
-        this.action = action;
     }
 
     public Player getPlayer() {
@@ -71,8 +52,11 @@ public final class BattleContext {
         return dead;
     }
 
-    public enum BattleAction {
-        HIT, RUN
+    public int getCommandAction() {
+        return commandAction;
     }
 
+    public void setCommandAction(int commandAction) {
+        this.commandAction = commandAction;
+    }
 }
